@@ -1,0 +1,6 @@
+# OBJET — allow all crawlers
+User-agent: *
+Allow: /
+
+# Add your sitemap once you have a domain:
+# Sitemap: https://your-domain.com/sitemap.xml

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop all — OBJET</title>
+  <meta name="description" content="Browse every OBJET object — lighting, seating and tabletop, made slowly and built to last." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-scroll>
+
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader__inner">
+      <span class="preloader__word">O</span><span class="preloader__word">B</span>
+      <span class="preloader__word">J</span><span class="preloader__word">E</span>
+      <span class="preloader__word">T</span>
+    </div>
+    <div class="preloader__bar"><span id="preloaderBar"></span></div>
+  </div>
+
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+  <!-- ============ NAV (shared) ============ -->
+  <header class="nav" id="nav">
+    <a href="index.html" class="nav__logo" data-magnetic>OBJET<span>®</span></a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="index.html#collections" data-link>Collections</a>
+      <a href="collection.html" data-link>Shop</a>
+      <a href="about.html" data-link>Story</a>
+      <a href="index.html#journal" data-link>Journal</a>
+    </nav>
+    <div class="nav__right">
+      <a href="#cart" class="nav__cart" data-magnetic>Cart <span class="nav__count">0</span></a>
+      <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <div class="menu" id="menu" aria-hidden="true">
+    <nav class="menu__links">
+      <a href="index.html#collections" data-menu-link>Collections</a>
+      <a href="collection.html" data-menu-link>Shop</a>
+      <a href="about.html" data-menu-link>Story</a>
+      <a href="index.html#journal" data-menu-link>Journal</a>
+      <a href="#cart" data-menu-link>Cart</a>
+    </nav>
+    <div class="menu__foot"><span>Montréal · Studio</span><span>hello@objet.studio</span></div>
+  </div>
+
+  <main id="top" class="subpage">
+
+    <!-- ============ COLLECTION HEADER ============ -->
+    <header class="collection-hero">
+      <nav class="breadcrumb" aria-label="Breadcrumb" data-reveal>
+        <a href="index.html">Home</a><span>/</span><span aria-current="page">Shop all</span>
+      </nav>
+      <h1 class="collection-hero__title" data-reveal>Everything<br />we make.</h1>
+      <p class="collection-hero__note" data-reveal>
+        Forty-one objects, drawn around one idea each and built to be repaired,
+        not replaced. Filter by room, or sort to find your piece.
+      </p>
+    </header>
+
+    <!-- ============ TOOLBAR ============ -->
+    <div class="toolbar">
+      <div class="filters" id="filters" role="tablist" aria-label="Filter by category">
+        <button class="chip is-active" data-filter="all">All <span>9</span></button>
+        <button class="chip" data-filter="Lighting">Lighting</button>
+        <button class="chip" data-filter="Seating">Seating</button>
+        <button class="chip" data-filter="Tabletop">Tabletop</button>
+      </div>
+      <label class="sort">
+        <span>Sort</span>
+        <select id="sort">
+          <option value="featured">Featured</option>
+          <option value="price-asc">Price · low to high</option>
+          <option value="price-desc">Price · high to low</option>
+          <option value="name">Alphabetical</option>
+        </select>
+      </label>
+    </div>
+
+    <!-- ============ PRODUCT GRID ============ -->
+    <section class="shop shop--collection">
+      <div class="shop__grid" id="grid">
+        <a href="product.html" class="product" data-reveal data-cat="Seating" data-price="1240" data-name="Monolith Lounge Chair">
+          <div class="product__media product__media--1"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Monolith Lounge Chair</h3><span class="product__price">$1,240</span></div>
+          <span class="product__tag">Seating</span>
+        </a>
+        <a href="product.html" class="product" data-reveal data-cat="Tabletop" data-price="96" data-name="Caraffe Vessel">
+          <div class="product__media product__media--2"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Caraffe Vessel</h3><span class="product__price">$96</span></div>
+          <span class="product__tag">Tabletop</span>
+        </a>
+        <a href="product.html" class="product" data-reveal data-cat="Lighting" data-price="620" data-name="Eclipse Floor Lamp">
+          <div class="product__media product__media--3"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Eclipse Floor Lamp</h3><span class="product__price">$620</span></div>
+          <span class="product__tag">Lighting</span>
+        </a>
+        <a href="product.html" class="product" data-reveal data-cat="Seating" data-price="210" data-name="Fold Stool">
+          <div class="product__media product__media--4"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Fold Stool</h3><span class="product__price">$210</span></div>
+          <span class="product__tag">Seating</span>
+        </a>
+        <a href="product.html" class="product" data-reveal data-cat="Tabletop" data-price="340" data-name="Plinth Side Table">
+          <div class="product__media product__media--5"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Plinth Side Table</h3><span class="product__price">$340</span></div>
+          <span class="product__tag">Tabletop</span>
+        </a>
+        <a href="product.html" class="product" data-reveal data-cat="Lighting" data-price="480" data-name="Halo Pendant">
+          <div class="product__media product__media--6"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Halo Pendant</h3><span class="product__price">$480</span></div>
+          <span class="product__tag">Lighting</span>
+        </a>
+        <a href="product.html" class="product" data-reveal data-cat="Tabletop" data-price="58" data-name="Ridge Bowl">
+          <div class="product__media product__media--2"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Ridge Bowl</h3><span class="product__price">$58</span></div>
+          <span class="product__tag">Tabletop</span>
+        </a>
+        <a href="product.html" class="product" data-reveal data-cat="Seating" data-price="890" data-name="Arc Bench">
+          <div class="product__media product__media--4"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Arc Bench</h3><span class="product__price">$890</span></div>
+          <span class="product__tag">Seating</span>
+        </a>
+        <a href="product.html" class="product" data-reveal data-cat="Lighting" data-price="270" data-name="Pebble Table Lamp">
+          <div class="product__media product__media--3"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Pebble Table Lamp</h3><span class="product__price">$270</span></div>
+          <span class="product__tag">Lighting</span>
+        </a>
+      </div>
+
+      <p class="shop__empty" id="empty" hidden>No pieces in this category yet — check back soon.</p>
+
+      <div class="loadmore-wrap">
+        <button class="btn btn--line loadmore" id="loadmore" data-magnetic><span>Load more</span></button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER (shared) ============ -->
+  <footer class="footer">
+    <div class="footer__big" aria-hidden="true">OBJET</div>
+    <div class="footer__cols">
+      <div class="footer__col"><span class="footer__head">Shop</span>
+        <a href="collection.html">Lighting</a><a href="collection.html">Seating</a>
+        <a href="collection.html">Tabletop</a><a href="collection.html">Gift cards</a></div>
+      <div class="footer__col"><span class="footer__head">Studio</span>
+        <a href="about.html">Our story</a><a href="index.html#journal">Journal</a>
+        <a href="index.html#story">Repairs</a><a href="index.html#story">Sustainability</a></div>
+      <div class="footer__col"><span class="footer__head">Help</span>
+        <a href="#">Shipping</a><a href="#">Returns</a><a href="#">Contact</a><a href="#">FAQ</a></div>
+      <div class="footer__col"><span class="footer__head">Social</span>
+        <a href="#">Instagram</a><a href="#">Pinterest</a><a href="#">Newsletter</a></div>
+    </div>
+    <div class="footer__base"><span>© 2025 OBJET Studio — All rights reserved.</span><span>Built to be edited freely.</span></div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

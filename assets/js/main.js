@@ -1,0 +1,584 @@
+/* ============================================================================
+   OBJET — main.js
+   Dependency-free. Each behaviour is its own block so you can lift or remove
+   pieces without breaking the rest. Respects prefers-reduced-motion.
+   ========================================================================== */
+
+(function () {
+  "use strict";
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer  = window.matchMedia("(pointer: fine)").matches;
+  const $  = (s, ctx = document) => ctx.querySelector(s);
+  const $$ = (s, ctx = document) => Array.from(ctx.querySelectorAll(s));
+
+  /* ----------------------------------------------------- PRELOADER */
+  (function preloader() {
+    const pre = $("#preloader");
+    const bar = $("#preloaderBar");
+    if (!pre) return;
+
+    let p = 0;
+    const tick = setInterval(() => {
+      p = Math.min(100, p + Math.random() * 22);
+      if (bar) bar.style.width = p + "%";
+      if (p >= 100) clearInterval(tick);
+    }, 130);
+
+    const finish = () => {
+      pre.classList.add("is-done");
+      document.body.classList.add("is-loaded");
+      revealHero();
+      setTimeout(() => pre.remove(), 1000);
+    };
+    // Wait for load OR a max of 1.6s so we never hang
+    window.addEventListener("load", () => setTimeout(finish, 600));
+    setTimeout(finish, 1600);
+  })();
+
+  /* ----------------------------------------------------- HERO STAGGER */
+  function revealHero() {
+    if (reduceMotion) {
+      $$("[data-hero]").forEach((w) => (w.style.transform = "none"));
+      return;
+    }
+    $$("[data-hero]").forEach((word, i) => {
+      word.style.transition = "transform .9s cubic-bezier(.22,1,.36,1)";
+      word.style.transitionDelay = 0.08 * i + "s";
+      requestAnimationFrame(() => (word.style.transform = "translateY(0)"));
+    });
+  }
+
+  /* ----------------------------------------------------- SCROLL REVEALS */
+  (function reveals() {
+    const items = $$("[data-reveal]");
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      items.forEach((el) => el.classList.add("is-in"));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-in");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+    );
+    // Stagger reveals that share a parent
+    items.forEach((el, i) => {
+      const sibs = el.parentElement
+        ? $$("[data-reveal]", el.parentElement).indexOf(el)
+        : 0;
+      el.style.transitionDelay = Math.max(0, sibs) * 0.07 + "s";
+      io.observe(el);
+    });
+  })();
+
+  /* ----------------------------------------------------- NAV: hide on scroll down */
+  (function nav() {
+    const nav = $("#nav");
+    if (!nav) return;
+    let last = 0;
+    window.addEventListener(
+      "scroll",
+      () => {
+        const y = window.scrollY;
+        if (y > last && y > 120) nav.classList.add("is-hidden");
+        else nav.classList.remove("is-hidden");
+        last = y;
+      },
+      { passive: true }
+    );
+  })();
+
+  /* ----------------------------------------------------- MOBILE MENU */
+  (function menu() {
+    const burger = $("#burger");
+    const menu = $("#menu");
+    if (!burger || !menu) return;
+    const toggle = (open) => {
+      burger.classList.toggle("is-open", open);
+      menu.classList.toggle("is-open", open);
+      burger.setAttribute("aria-expanded", String(open));
+      menu.setAttribute("aria-hidden", String(!open));
+      document.body.style.overflow = open ? "hidden" : "";
+    };
+    burger.addEventListener("click", () =>
+      toggle(!menu.classList.contains("is-open"))
+    );
+    $$("[data-menu-link]").forEach((a) =>
+      a.addEventListener("click", () => toggle(false))
+    );
+  })();
+
+  /* ----------------------------------------------------- CUSTOM CURSOR */
+  (function cursor() {
+    const dot = $("#cursor");
+    if (!dot || !finePointer || reduceMotion) return;
+    document.body.classList.add("has-cursor");
+
+    let x = 0, y = 0, cx = 0, cy = 0;
+    document.addEventListener("mousemove", (e) => {
+      x = e.clientX; y = e.clientY;
+      dot.classList.add("is-active");
+    });
+    (function loop() {
+      cx += (x - cx) * 0.18;
+      cy += (y - cy) * 0.18;
+      dot.style.transform = `translate(${cx}px, ${cy}px) translate(-50%,-50%)`;
+      requestAnimationFrame(loop);
+    })();
+
+    // Grow over interactive elements
+    $$("a, button, [data-magnetic]").forEach((el) => {
+      el.addEventListener("mouseenter", () => dot.classList.add("is-hover"));
+      el.addEventListener("mouseleave", () => dot.classList.remove("is-hover"));
+    });
+  })();
+
+  /* ----------------------------------------------------- MAGNETIC ELEMENTS */
+  (function magnetic() {
+    if (!finePointer || reduceMotion) return;
+    $$("[data-magnetic]").forEach((el) => {
+      const strength = 0.32;
+      el.style.transition = "transform .35s cubic-bezier(.22,1,.36,1)";
+      el.addEventListener("mousemove", (e) => {
+        const r = el.getBoundingClientRect();
+        const mx = e.clientX - (r.left + r.width / 2);
+        const my = e.clientY - (r.top + r.height / 2);
+        el.style.transform = `translate(${mx * strength}px, ${my * strength}px)`;
+      });
+      el.addEventListener("mouseleave", () => (el.style.transform = ""));
+    });
+  })();
+
+  /* ----------------------------------------------------- PARALLAX (floats + bg) */
+  (function parallax() {
+    if (reduceMotion) return;
+    const floats = $$("[data-parallax]");
+    const bg = $("[data-parallax-bg]");
+    let ticking = false;
+
+    const update = () => {
+      const y = window.scrollY;
+      floats.forEach((el) => {
+        const speed = parseFloat(el.dataset.parallax) || 0;
+        el.style.transform = `translateY(${y * speed}px)`;
+      });
+      if (bg) {
+        const rect = bg.getBoundingClientRect();
+        const off = (rect.top - window.innerHeight / 2) * -0.06;
+        bg.style.backgroundPosition = `center ${off}px`;
+      }
+      ticking = false;
+    };
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!ticking) { requestAnimationFrame(update); ticking = true; }
+      },
+      { passive: true }
+    );
+    update();
+  })();
+
+  /* ----------------------------------------------------- PINNED SHOWCASE */
+  (function showcase() {
+    const section = $("#showcase");
+    const card = $("#showcaseCard");
+    if (!section || !card) return;
+    const steps = $$(".showcase__step", section);
+    const dots = $$(".showcase__dot", section);
+    let ticking = false;
+
+    const update = () => {
+      const rect = section.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      // progress 0 -> 1 across the pinned scroll
+      let prog = total > 0 ? (-rect.top) / total : 0;
+      prog = Math.min(1, Math.max(0, prog));
+
+      if (!reduceMotion) {
+        const scale = 1 + prog * 0.28;
+        const rot = (prog - 0.5) * 8;
+        card.style.transform = `scale(${scale}) rotate(${rot}deg)`;
+      }
+
+      const idx = Math.min(steps.length - 1, Math.floor(prog * steps.length));
+      steps.forEach((s, i) => s.classList.toggle("is-active", i === idx));
+      dots.forEach((d, i) => d.classList.toggle("is-active", i === idx));
+      ticking = false;
+    };
+    window.addEventListener(
+      "scroll",
+      () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } },
+      { passive: true }
+    );
+    window.addEventListener("resize", update);
+    update();
+  })();
+
+  /* ----------------------------------------------------- COUNT-UP STATS */
+  (function counters() {
+    const nums = $$("[data-count]");
+    if (!nums.length || !("IntersectionObserver" in window)) {
+      nums.forEach((n) => (n.textContent = n.dataset.count + (n.dataset.suffix || "")));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          const el = e.target;
+          const target = parseInt(el.dataset.count, 10);
+          const suffix = el.dataset.suffix || "";
+          if (reduceMotion) { el.textContent = target + suffix; io.unobserve(el); return; }
+          const dur = 1400; const t0 = performance.now();
+          const step = (t) => {
+            const k = Math.min(1, (t - t0) / dur);
+            const eased = 1 - Math.pow(1 - k, 3);
+            el.textContent = Math.round(target * eased) + suffix;
+            if (k < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+          io.unobserve(el);
+        });
+      },
+      { threshold: 0.6 }
+    );
+    nums.forEach((n) => io.observe(n));
+  })();
+
+  /* ----------------------------------------------------- MARQUEE SPEED ON SCROLL */
+  (function marqueeBoost() {
+    const track = $("#marquee");
+    if (!track || reduceMotion) return;
+    let last = window.scrollY, dir = 1;
+    window.addEventListener(
+      "scroll",
+      () => {
+        dir = window.scrollY > last ? 1 : -1;
+        last = window.scrollY;
+        track.style.animationDirection = dir > 0 ? "normal" : "reverse";
+      },
+      { passive: true }
+    );
+  })();
+
+  /* ----------------------------------------------------- NEWSLETTER (demo only) */
+  (function signup() {
+    const form = $("#signupForm");
+    const msg = $("#signupMsg");
+    if (!form) return;
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const input = form.querySelector("input");
+      if (msg) msg.textContent = "Thanks — you're on the list ✳";
+      if (input) input.value = "";
+      // TODO: wire to your email provider / Shopify customer API here.
+    });
+  })();
+
+  /* ----------------------------------------------------- TILT (collection cards) */
+  (function tilt() {
+    if (!finePointer || reduceMotion) return;
+    $$("[data-tilt]").forEach((el) => {
+      const media = $(".coll__media", el);
+      if (!media) return;
+      el.addEventListener("mousemove", (e) => {
+        const r = el.getBoundingClientRect();
+        const rx = ((e.clientY - r.top) / r.height - 0.5) * -6;
+        const ry = ((e.clientX - r.left) / r.width - 0.5) * 6;
+        media.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px)`;
+      });
+      el.addEventListener("mouseleave", () => (media.style.transform = ""));
+    });
+  })();
+})();
+
+/* ============================================================================
+   SUBPAGE INTERACTIONS — product detail + collection listing
+   Appended as one IIFE; each block no-ops if its elements aren't present,
+   so this safely runs on every page.
+   ========================================================================== */
+(function () {
+  "use strict";
+  const $  = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+
+  /* ---------------------------------------- PDP: gallery thumbnails */
+  (function gallery() {
+    const main = $("#pdpMain");
+    const thumbs = $$("#pdpThumbs .pdp__thumb");
+    if (!main || !thumbs.length) return;
+    thumbs.forEach((t) =>
+      t.addEventListener("click", () => {
+        thumbs.forEach((x) => x.classList.remove("is-active"));
+        t.classList.add("is-active");
+        main.style.background = t.dataset.bg;
+      })
+    );
+  })();
+
+  /* ---------------------------------------- PDP: swatches + pills */
+  function singleSelect(groupSelector, onPick) {
+    $$(groupSelector).forEach((group) => {
+      const btns = $$("button", group);
+      btns.forEach((b) =>
+        b.addEventListener("click", () => {
+          btns.forEach((x) => x.classList.remove("is-active"));
+          b.classList.add("is-active");
+          onPick && onPick(group, b.dataset.value);
+        })
+      );
+    });
+  }
+  singleSelect("[data-swatch-group='finish']", (_, v) => {
+    const out = $("#finishVal"); if (out) out.textContent = v;
+  });
+  singleSelect("[data-pill-group='size']", (_, v) => {
+    const out = $("#sizeVal"); if (out) out.textContent = v;
+  });
+
+  /* ---------------------------------------- PDP: quantity + live total */
+  (function quantity() {
+    const val = $("#qtyVal");
+    const total = $("#pdpTotal");
+    if (!val) return;
+    const unit = 480; // base price; wire to your product data
+    let q = 1;
+    const fmt = (n) => "$" + n.toLocaleString("en-US");
+    $$(".qty__btn").forEach((b) =>
+      b.addEventListener("click", () => {
+        q = Math.max(1, q + parseInt(b.dataset.step, 10));
+        val.textContent = q;
+        if (total) total.textContent = fmt(unit * q);
+      })
+    );
+  })();
+
+  /* ---------------------------------------- PDP: accordions */
+  (function accordion() {
+    const heads = $$(".acc__head");
+    if (!heads.length) return;
+    heads.forEach((head) => {
+      const body = head.nextElementSibling;
+      head.addEventListener("click", () => {
+        const open = head.getAttribute("aria-expanded") === "true";
+        head.setAttribute("aria-expanded", String(!open));
+        body.style.maxHeight = open ? "0px" : body.scrollHeight + "px";
+      });
+    });
+  })();
+
+  /* ---------------------------------------- COLLECTION: filter + sort + load more */
+  (function collection() {
+    const grid = $("#grid");
+    if (!grid) return;
+    const cards = $$(".product", grid);
+    const chips = $$("#filters .chip");
+    const sortSel = $("#sort");
+    const empty = $("#empty");
+    const loadmore = $("#loadmore");
+
+    const PAGE = 6;            // how many show before "Load more"
+    let activeFilter = "all";
+    let shown = PAGE;
+
+    function apply() {
+      // 1) filter into a working list
+      const matched = cards.filter(
+        (c) => activeFilter === "all" || c.dataset.cat === activeFilter
+      );
+
+      // 2) sort the working list, then reorder in the DOM
+      const v = sortSel ? sortSel.value : "featured";
+      const sorted = [...matched].sort((a, b) => {
+        if (v === "price-asc")  return (+a.dataset.price) - (+b.dataset.price);
+        if (v === "price-desc") return (+b.dataset.price) - (+a.dataset.price);
+        if (v === "name")       return a.dataset.name.localeCompare(b.dataset.name);
+        return 0; // featured = original order
+      });
+      sorted.forEach((c) => grid.appendChild(c));
+
+      // 3) show/hide with the load-more cap
+      cards.forEach((c) => c.classList.add("is-hidden"));
+      sorted.slice(0, shown).forEach((c) => c.classList.remove("is-hidden"));
+
+      if (empty) empty.hidden = matched.length !== 0;
+      if (loadmore) loadmore.style.display = shown >= matched.length ? "none" : "";
+    }
+
+    chips.forEach((chip) =>
+      chip.addEventListener("click", () => {
+        chips.forEach((x) => x.classList.remove("is-active"));
+        chip.classList.add("is-active");
+        activeFilter = chip.dataset.filter;
+        shown = PAGE;
+        apply();
+      })
+    );
+    if (sortSel) sortSel.addEventListener("change", () => { shown = PAGE; apply(); });
+    if (loadmore) loadmore.addEventListener("click", () => { shown += PAGE; apply(); });
+
+    apply();
+  })();
+})();
+
+/* ============================================================================
+   CART DRAWER — in-memory cart shared across pages.
+   The drawer markup is injected here so it exists on every page without
+   duplicating HTML. Cart state lives in a JS array (resets on reload); to
+   persist it in your own build, save/restore `cart` via localStorage.
+   ========================================================================== */
+(function () {
+  "use strict";
+  const $  = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+
+  const money = (n) => "$" + Number(n).toLocaleString("en-US");
+  const parsePrice = (txt) => parseFloat(String(txt).replace(/[^0-9.]/g, "")) || 0;
+  const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+  let cart = []; // { id, name, cat, price, qty, bg }
+
+  /* ---- inject drawer markup ---- */
+  const drawer = document.createElement("div");
+  drawer.className = "drawer";
+  drawer.id = "drawer";
+  drawer.setAttribute("aria-hidden", "true");
+  drawer.innerHTML = `
+    <div class="drawer__overlay" data-cart-close></div>
+    <aside class="drawer__panel" role="dialog" aria-label="Shopping cart">
+      <header class="drawer__head">
+        <span class="drawer__title">Your cart <span id="cartCount">0</span></span>
+        <button class="drawer__close" data-cart-close aria-label="Close cart">✕</button>
+      </header>
+      <div class="drawer__items" id="cartItems"></div>
+      <div class="drawer__empty" id="cartEmpty">
+        Your cart is empty.
+        <a href="collection.html">Start shopping →</a>
+      </div>
+      <footer class="drawer__foot" id="cartFoot" hidden>
+        <div class="drawer__row"><span>Subtotal</span><span id="cartSubtotal">$0</span></div>
+        <p class="drawer__note">Shipping &amp; taxes calculated at checkout.</p>
+        <button class="btn btn--solid drawer__checkout" data-magnetic><span>Checkout</span></button>
+      </footer>
+    </aside>`;
+  document.body.appendChild(drawer);
+
+  const itemsEl = $("#cartItems");
+  const emptyEl = $("#cartEmpty");
+  const footEl  = $("#cartFoot");
+
+  /* ---- open / close ---- */
+  function open()  { drawer.classList.add("is-open"); drawer.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden"; }
+  function close() { drawer.classList.remove("is-open"); drawer.setAttribute("aria-hidden", "true"); document.body.style.overflow = ""; }
+
+  drawer.addEventListener("click", (e) => { if (e.target.matches("[data-cart-close]")) close(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+
+  // Any link/button pointing at the cart opens the drawer
+  $$('.nav__cart, [data-menu-link][href="#cart"], [href="#cart"]').forEach((el) =>
+    el.addEventListener("click", (e) => { e.preventDefault(); open(); })
+  );
+
+  /* ---- render ---- */
+  function render() {
+    const count = cart.reduce((n, i) => n + i.qty, 0);
+    const subtotal = cart.reduce((n, i) => n + i.qty * i.price, 0);
+
+    $("#cartCount").textContent = count;
+    $$(".nav__count").forEach((b) => { b.textContent = count; b.classList.remove("is-bump"); void b.offsetWidth; b.classList.add("is-bump"); });
+
+    const hasItems = cart.length > 0;
+    emptyEl.hidden = hasItems;
+    footEl.hidden = !hasItems;
+
+    itemsEl.innerHTML = cart.map((i) => `
+      <div class="citem" data-id="${i.id}">
+        <div class="citem__media" style="background:${i.bg}"></div>
+        <div class="citem__body">
+          <div class="citem__top">
+            <h4>${i.name}</h4>
+            <button class="citem__remove" data-remove="${i.id}">Remove</button>
+          </div>
+          <span class="citem__tag">${i.cat}</span>
+          <div class="citem__bottom">
+            <div class="qty qty--sm">
+              <button class="qty__btn" data-dec="${i.id}" aria-label="Decrease">−</button>
+              <span class="qty__val">${i.qty}</span>
+              <button class="qty__btn" data-inc="${i.id}" aria-label="Increase">+</button>
+            </div>
+            <span class="citem__price">${money(i.qty * i.price)}</span>
+          </div>
+        </div>
+      </div>`).join("");
+
+    if (hasItems) $("#cartSubtotal").textContent = money(subtotal);
+  }
+
+  /* ---- mutations (event delegation) ---- */
+  itemsEl.addEventListener("click", (e) => {
+    const inc = e.target.closest("[data-inc]");
+    const dec = e.target.closest("[data-dec]");
+    const rem = e.target.closest("[data-remove]");
+    if (inc) { const it = cart.find((x) => x.id === inc.dataset.inc); if (it) it.qty++; }
+    if (dec) { const it = cart.find((x) => x.id === dec.dataset.dec); if (it && --it.qty < 1) cart = cart.filter((x) => x !== it); }
+    if (rem) { cart = cart.filter((x) => x.id !== rem.dataset.remove); }
+    if (inc || dec || rem) render();
+  });
+
+  function addItem({ id, name, cat, price, bg, qty = 1 }) {
+    const existing = cart.find((x) => x.id === id);
+    if (existing) existing.qty += qty;
+    else cart.push({ id, name, cat, price, bg, qty });
+    render();
+    open();
+  }
+
+  /* ---- wire "Quick add +" on product cards ---- */
+  $$(".product__add").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();   // don't follow the card's link
+      e.stopPropagation();
+      const card = btn.closest(".product");
+      if (!card) return;
+      const name = $(".product__info h3", card)?.textContent.trim() || "Item";
+      const price = parsePrice($(".product__price", card)?.textContent);
+      const cat = $(".product__tag", card)?.textContent.trim() || "";
+      const media = $(".product__media", card);
+      const bg = media ? getComputedStyle(media).backgroundImage : "var(--card-1)";
+      addItem({ id: slug(name), name, cat, price, bg });
+    });
+  });
+
+  /* ---- wire the product detail "Add to cart" ---- */
+  const pdpAdd = $(".pdp__add");
+  if (pdpAdd) {
+    pdpAdd.addEventListener("click", () => {
+      const name = $(".pdp__title")?.textContent.trim() || "Item";
+      const cat = ($(".pdp__tag")?.textContent.split("·")[0] || "").trim();
+      const price = parsePrice($(".pdp__price")?.textContent);
+      const qty = parseInt($("#qtyVal")?.textContent || "1", 10);
+      const bg = $("#pdpMain") ? getComputedStyle($("#pdpMain")).background : "var(--accent)";
+      addItem({ id: slug(name), name, cat, price, bg, qty });
+    });
+  }
+
+  /* ---- checkout (demo) ---- */
+  drawer.addEventListener("click", (e) => {
+    if (e.target.closest(".drawer__checkout")) {
+      // TODO: hand off to Shopify checkout / your payment flow.
+      $("#cartItems").innerHTML =
+        '<p style="font-family:var(--font-mono);font-size:13px;color:var(--ink-mut);padding:30px 0">' +
+        "This is a demo checkout — connect your store's checkout here.</p>";
+      footEl.hidden = true;
+    }
+  });
+
+  render();
+})();
