@@ -348,7 +348,7 @@
     const val = $("#qtyVal");
     const total = $("#pdpTotal");
     if (!val) return;
-    const unit = 480; // base price; wire to your product data
+    const unit = 245; // base price; wire to your product data
     let q = 1;
     const fmt = (n) => "$" + n.toLocaleString("en-US");
     $$(".qty__btn").forEach((b) =>
@@ -500,7 +500,7 @@
 
     itemsEl.innerHTML = cart.map((i) => `
       <div class="citem" data-id="${i.id}">
-        <div class="citem__media" style="background:${i.bg}"></div>
+        <div class="citem__media" style="background-image:${i.bg}"></div>
         <div class="citem__body">
           <div class="citem__top">
             <h4>${i.name}</h4>
@@ -564,7 +564,7 @@
       const cat = ($(".pdp__tag")?.textContent.split("·")[0] || "").trim();
       const price = parsePrice($(".pdp__price")?.textContent);
       const qty = parseInt($("#qtyVal")?.textContent || "1", 10);
-      const bg = $("#pdpMain") ? getComputedStyle($("#pdpMain")).background : "var(--accent)";
+      const bg = $("#pdpMain") ? getComputedStyle($("#pdpMain")).backgroundImage : "var(--accent)";
       addItem({ id: slug(name), name, cat, price, bg, qty });
     });
   }

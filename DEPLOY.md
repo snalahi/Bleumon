@@ -1,4 +1,4 @@
-# Publishing OBJET — go-live guide
+# Publishing Bleumon — go-live guide
 
 This is a **static front-end** (HTML/CSS/JS). That's great news for hosting: it
 runs on any static host, free, in a few minutes. One honest caveat first, then

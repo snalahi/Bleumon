@@ -1,4 +1,4 @@
-# OBJET — animated storefront starter
+# Bleumon — animated storefront starter
 
 An original, dependency-free storefront template with the kind of motion you
 liked in premium Shopify themes: a load reveal, staggered hero, scroll-triggered
@@ -23,7 +23,7 @@ npx serve .
 ## Structure
 
 ```
-objet/
+bleumon/
 ├── index.html              ← home page (all marketing sections)
 ├── collection.html         ← listing page: filter, sort, load-more grid
 ├── product.html            ← product detail: gallery, options, accordions
@@ -95,3 +95,18 @@ product cards with a `{% for product in collection.products %}` loop.
 - No external JS dependencies. Only Google Fonts is loaded over the network.
 - All scroll work is throttled with `requestAnimationFrame`.
 ```
+
+## Images & licensing (important)
+
+The product, lookbook and journal photos are **free stock photography from
+Pexels**, embedded by direct URL. Pexels content is free to use commercially and
+requires no attribution, which is why it's safe to ship on a live store. Each
+image also sits over a CSS gradient fallback, so if a photo ever fails to load,
+the card still looks intentional instead of broken.
+
+These are placeholders for a real brand: when you have your own campaign
+photography, replace the Pexels URLs. Every image is set as an inline
+`background-image` on the relevant `.product__media`, `.coll__media`,
+`.pdp__main`, `.entry__media`, `story__media`, `about-banner`, or hero `.float`
+element — search the HTML for `images.pexels.com` to find them all and swap in
+your own URLs (keep the `,linear-gradient(...)` fallback layer).

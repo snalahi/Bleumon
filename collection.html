@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shop all — OBJET</title>
-  <meta name="description" content="Browse every OBJET object — lighting, seating and tabletop, made slowly and built to last." />
-
+  <title>Shop all — Bleumon</title>
+  <meta name="description" content="Browse every Bleumon style — women's, men's and accessories, designed in Paris and made to last." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
@@ -16,18 +15,18 @@
 
   <div class="preloader" id="preloader" aria-hidden="true">
     <div class="preloader__inner">
-      <span class="preloader__word">O</span><span class="preloader__word">B</span>
-      <span class="preloader__word">J</span><span class="preloader__word">E</span>
-      <span class="preloader__word">T</span>
+      <span class="preloader__word">B</span><span class="preloader__word">L</span>
+      <span class="preloader__word">E</span><span class="preloader__word">U</span>
+      <span class="preloader__word">M</span><span class="preloader__word">O</span>
+      <span class="preloader__word">N</span>
     </div>
     <div class="preloader__bar"><span id="preloaderBar"></span></div>
   </div>
 
   <div class="cursor" id="cursor" aria-hidden="true"></div>
 
-  <!-- ============ NAV (shared) ============ -->
   <header class="nav" id="nav">
-    <a href="index.html" class="nav__logo" data-magnetic>OBJET<span>®</span></a>
+    <a href="index.html" class="nav__logo" data-magnetic>BLEUMON<span>®</span></a>
     <nav class="nav__links" aria-label="Primary">
       <a href="index.html#collections" data-link>Collections</a>
       <a href="collection.html" data-link>Shop</a>
@@ -48,30 +47,28 @@
       <a href="index.html#journal" data-menu-link>Journal</a>
       <a href="#cart" data-menu-link>Cart</a>
     </nav>
-    <div class="menu__foot"><span>Montréal · Studio</span><span>hello@objet.studio</span></div>
+    <div class="menu__foot"><span>Paris · Atelier</span><span>hello@bleumon.com</span></div>
   </div>
 
   <main id="top" class="subpage">
 
-    <!-- ============ COLLECTION HEADER ============ -->
     <header class="collection-hero">
       <nav class="breadcrumb" aria-label="Breadcrumb" data-reveal>
         <a href="index.html">Home</a><span>/</span><span aria-current="page">Shop all</span>
       </nav>
-      <h1 class="collection-hero__title" data-reveal>Everything<br />we make.</h1>
+      <h1 class="collection-hero__title" data-reveal>Everything<br />in the edit.</h1>
       <p class="collection-hero__note" data-reveal>
-        Forty-one objects, drawn around one idea each and built to be repaired,
-        not replaced. Filter by room, or sort to find your piece.
+        Forty core styles across women's, men's and accessories — designed in
+        Paris, made in small runs. Filter by category, or sort to find your piece.
       </p>
     </header>
 
-    <!-- ============ TOOLBAR ============ -->
     <div class="toolbar">
       <div class="filters" id="filters" role="tablist" aria-label="Filter by category">
         <button class="chip is-active" data-filter="all">All <span>9</span></button>
-        <button class="chip" data-filter="Lighting">Lighting</button>
-        <button class="chip" data-filter="Seating">Seating</button>
-        <button class="chip" data-filter="Tabletop">Tabletop</button>
+        <button class="chip" data-filter="Women">Women</button>
+        <button class="chip" data-filter="Men">Men</button>
+        <button class="chip" data-filter="Accessories">Accessories</button>
       </div>
       <label class="sort">
         <span>Sort</span>
@@ -84,57 +81,56 @@
       </label>
     </div>
 
-    <!-- ============ PRODUCT GRID ============ -->
     <section class="shop shop--collection">
       <div class="shop__grid" id="grid">
-        <a href="product.html" class="product" data-reveal data-cat="Seating" data-price="1240" data-name="Monolith Lounge Chair">
-          <div class="product__media product__media--1"><span class="product__add" data-magnetic>Quick add +</span></div>
-          <div class="product__info"><h3>Monolith Lounge Chair</h3><span class="product__price">$1,240</span></div>
-          <span class="product__tag">Seating</span>
+        <a href="product.html" class="product" data-reveal data-cat="Women" data-price="245" data-name="The Tailored Blazer">
+          <div class="product__media" style="background-image:url('https://images.pexels.com/photos/19272278/pexels-photo-19272278.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(155deg,#cfc8b8,#a39c8a);background-size:cover;background-position:center top"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>The Tailored Blazer</h3><span class="product__price">$245</span></div>
+          <span class="product__tag">Women</span>
         </a>
-        <a href="product.html" class="product" data-reveal data-cat="Tabletop" data-price="96" data-name="Caraffe Vessel">
-          <div class="product__media product__media--2"><span class="product__add" data-magnetic>Quick add +</span></div>
-          <div class="product__info"><h3>Caraffe Vessel</h3><span class="product__price">$96</span></div>
-          <span class="product__tag">Tabletop</span>
+        <a href="product.html" class="product" data-reveal data-cat="Women" data-price="120" data-name="Straight-Leg Denim">
+          <div class="product__media" style="background-image:url('https://images.pexels.com/photos/4102966/pexels-photo-4102966.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(155deg,#d7d2c4,#b6b2a4);background-size:cover;background-position:center top"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Straight-Leg Denim</h3><span class="product__price">$120</span></div>
+          <span class="product__tag">Women</span>
         </a>
-        <a href="product.html" class="product" data-reveal data-cat="Lighting" data-price="620" data-name="Eclipse Floor Lamp">
-          <div class="product__media product__media--3"><span class="product__add" data-magnetic>Quick add +</span></div>
-          <div class="product__info"><h3>Eclipse Floor Lamp</h3><span class="product__price">$620</span></div>
-          <span class="product__tag">Lighting</span>
+        <a href="product.html" class="product" data-reveal data-cat="Women" data-price="165" data-name="Slip Midi Dress">
+          <div class="product__media" style="background-image:url('https://images.pexels.com/photos/30736117/pexels-photo-30736117.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(155deg,#ddd6c6,#bdb6a4);background-size:cover;background-position:center top"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Slip Midi Dress</h3><span class="product__price">$165</span></div>
+          <span class="product__tag">Women</span>
         </a>
-        <a href="product.html" class="product" data-reveal data-cat="Seating" data-price="210" data-name="Fold Stool">
-          <div class="product__media product__media--4"><span class="product__add" data-magnetic>Quick add +</span></div>
-          <div class="product__info"><h3>Fold Stool</h3><span class="product__price">$210</span></div>
-          <span class="product__tag">Seating</span>
+        <a href="product.html" class="product" data-reveal data-cat="Men" data-price="110" data-name="Streetwear Hoodie">
+          <div class="product__media" style="background-image:url('https://images.pexels.com/photos/35347257/pexels-photo-35347257.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(155deg,#cdd0c4,#9ca08f);background-size:cover;background-position:center top"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Streetwear Hoodie</h3><span class="product__price">$110</span></div>
+          <span class="product__tag">Men</span>
         </a>
-        <a href="product.html" class="product" data-reveal data-cat="Tabletop" data-price="340" data-name="Plinth Side Table">
-          <div class="product__media product__media--5"><span class="product__add" data-magnetic>Quick add +</span></div>
-          <div class="product__info"><h3>Plinth Side Table</h3><span class="product__price">$340</span></div>
-          <span class="product__tag">Tabletop</span>
+        <a href="product.html" class="product" data-reveal data-cat="Accessories" data-price="260" data-name="Leather Tote">
+          <div class="product__media" style="background-image:url('https://images.pexels.com/photos/9603489/pexels-photo-9603489.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(155deg,#ded6c9,#c0b29c);background-size:cover;background-position:center"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Leather Tote</h3><span class="product__price">$260</span></div>
+          <span class="product__tag">Accessories</span>
         </a>
-        <a href="product.html" class="product" data-reveal data-cat="Lighting" data-price="480" data-name="Halo Pendant">
-          <div class="product__media product__media--6"><span class="product__add" data-magnetic>Quick add +</span></div>
-          <div class="product__info"><h3>Halo Pendant</h3><span class="product__price">$480</span></div>
-          <span class="product__tag">Lighting</span>
+        <a href="product.html" class="product" data-reveal data-cat="Women" data-price="210" data-name="Evening Slip Dress">
+          <div class="product__media" style="background-image:url('https://images.pexels.com/photos/14801125/pexels-photo-14801125.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(155deg,#d7d2c4,#b6b2a4);background-size:cover;background-position:center top"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Evening Slip Dress</h3><span class="product__price">$210</span></div>
+          <span class="product__tag">Women</span>
         </a>
-        <a href="product.html" class="product" data-reveal data-cat="Tabletop" data-price="58" data-name="Ridge Bowl">
-          <div class="product__media product__media--2"><span class="product__add" data-magnetic>Quick add +</span></div>
-          <div class="product__info"><h3>Ridge Bowl</h3><span class="product__price">$58</span></div>
-          <span class="product__tag">Tabletop</span>
+        <a href="product.html" class="product" data-reveal data-cat="Accessories" data-price="190" data-name="Structured Purse">
+          <div class="product__media" style="background-image:url('https://images.pexels.com/photos/19711183/pexels-photo-19711183.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(155deg,#ded6c9,#c0b29c);background-size:cover;background-position:center"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Structured Purse</h3><span class="product__price">$190</span></div>
+          <span class="product__tag">Accessories</span>
         </a>
-        <a href="product.html" class="product" data-reveal data-cat="Seating" data-price="890" data-name="Arc Bench">
-          <div class="product__media product__media--4"><span class="product__add" data-magnetic>Quick add +</span></div>
-          <div class="product__info"><h3>Arc Bench</h3><span class="product__price">$890</span></div>
-          <span class="product__tag">Seating</span>
+        <a href="product.html" class="product" data-reveal data-cat="Men" data-price="135" data-name="Urban Overshirt">
+          <div class="product__media" style="background-image:url('https://images.pexels.com/photos/9431122/pexels-photo-9431122.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(155deg,#cdd0c4,#9ca08f);background-size:cover;background-position:center top"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Urban Overshirt</h3><span class="product__price">$135</span></div>
+          <span class="product__tag">Men</span>
         </a>
-        <a href="product.html" class="product" data-reveal data-cat="Lighting" data-price="270" data-name="Pebble Table Lamp">
-          <div class="product__media product__media--3"><span class="product__add" data-magnetic>Quick add +</span></div>
-          <div class="product__info"><h3>Pebble Table Lamp</h3><span class="product__price">$270</span></div>
-          <span class="product__tag">Lighting</span>
+        <a href="product.html" class="product" data-reveal data-cat="Women" data-price="230" data-name="Striped Blazer">
+          <div class="product__media" style="background-image:url('https://images.pexels.com/photos/20745051/pexels-photo-20745051.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(155deg,#cdc6b6,#9ca08f);background-size:cover;background-position:center top"><span class="product__add" data-magnetic>Quick add +</span></div>
+          <div class="product__info"><h3>Striped Blazer</h3><span class="product__price">$230</span></div>
+          <span class="product__tag">Women</span>
         </a>
       </div>
 
-      <p class="shop__empty" id="empty" hidden>No pieces in this category yet — check back soon.</p>
+      <p class="shop__empty" id="empty" hidden>No styles in this category yet — check back soon.</p>
 
       <div class="loadmore-wrap">
         <button class="btn btn--line loadmore" id="loadmore" data-magnetic><span>Load more</span></button>
@@ -142,22 +138,21 @@
     </section>
   </main>
 
-  <!-- ============ FOOTER (shared) ============ -->
   <footer class="footer">
-    <div class="footer__big" aria-hidden="true">OBJET</div>
+    <div class="footer__big" aria-hidden="true">BLEUMON</div>
     <div class="footer__cols">
       <div class="footer__col"><span class="footer__head">Shop</span>
-        <a href="collection.html">Lighting</a><a href="collection.html">Seating</a>
-        <a href="collection.html">Tabletop</a><a href="collection.html">Gift cards</a></div>
+        <a href="collection.html">Women</a><a href="collection.html">Men</a>
+        <a href="collection.html">Accessories</a><a href="collection.html">Gift cards</a></div>
       <div class="footer__col"><span class="footer__head">Studio</span>
         <a href="about.html">Our story</a><a href="index.html#journal">Journal</a>
-        <a href="index.html#story">Repairs</a><a href="index.html#story">Sustainability</a></div>
+        <a href="about.html">Sustainability</a><a href="about.html">Careers</a></div>
       <div class="footer__col"><span class="footer__head">Help</span>
-        <a href="#">Shipping</a><a href="#">Returns</a><a href="#">Contact</a><a href="#">FAQ</a></div>
+        <a href="#">Shipping</a><a href="#">Returns</a><a href="#">Size guide</a><a href="#">Contact</a></div>
       <div class="footer__col"><span class="footer__head">Social</span>
-        <a href="#">Instagram</a><a href="#">Pinterest</a><a href="#">Newsletter</a></div>
+        <a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Pinterest</a></div>
     </div>
-    <div class="footer__base"><span>© 2025 OBJET Studio — All rights reserved.</span><span>Built to be edited freely.</span></div>
+    <div class="footer__base"><span>© 2025 Bleumon — All rights reserved.</span><span>Designed in Paris.</span></div>
   </footer>
 
   <script src="assets/js/main.js"></script>
