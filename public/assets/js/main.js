@@ -377,58 +377,195 @@
     });
   })();
 
-  /* ---------------------------------------- COLLECTION: filter + sort + load more */
+  /* ---------------------------------------- COLLECTION: filter + sort + view + wishlist */
   (function collection() {
     const grid = $("#grid");
     if (!grid) return;
-    const cards = $$(".product", grid);
-    const chips = $$("#filters .chip");
-    const sortSel = $("#sort");
-    const empty = $("#empty");
-    const loadmore = $("#loadmore");
 
-    const PAGE = 6;            // how many show before "Load more"
+    const cards    = $$(".product", grid);
+    const chips    = $$("#filters .chip");
+    const sortSel  = $("#sort");
+    const empty    = $("#empty");
+    const loadmore = $("#loadmore");
+    const countEl  = $("#filterCount");
+    const indicator = $("#chipIndicator");
+
+    const PAGE = 6;
     let activeFilter = "all";
     let shown = PAGE;
 
+    /* ---- sliding chip indicator ---- */
+    function moveIndicator(chip) {
+      if (!indicator || !chip) return;
+      const track = chip.closest(".chip-track");
+      if (!track) return;
+      const tr = track.getBoundingClientRect();
+      const cr = chip.getBoundingClientRect();
+      indicator.style.width  = cr.width  + "px";
+      indicator.style.height = cr.height + "px";
+      indicator.style.left   = (cr.left - tr.left) + "px";
+      indicator.style.top    = (cr.top  - tr.top)  + "px";
+    }
+    const initActive = chips.find((c) => c.classList.contains("is-active"));
+    // defer one frame so layout is ready
+    requestAnimationFrame(() => moveIndicator(initActive));
+    window.addEventListener("resize", () => {
+      moveIndicator(chips.find((c) => c.classList.contains("is-active")));
+    }, { passive: true });
+
+    /* ---- filter count label ---- */
+    function updateCount() {
+      if (!countEl) return;
+      const n = cards.filter((c) => activeFilter === "all" || c.dataset.cat === activeFilter).length;
+      countEl.textContent = n + " style" + (n !== 1 ? "s" : "");
+    }
+
+    /* ---- core apply (filter + sort + paginate) ---- */
     function apply() {
-      // 1) filter into a working list
       const matched = cards.filter(
         (c) => activeFilter === "all" || c.dataset.cat === activeFilter
       );
-
-      // 2) sort the working list, then reorder in the DOM
       const v = sortSel ? sortSel.value : "featured";
       const sorted = [...matched].sort((a, b) => {
         if (v === "price-asc")  return (+a.dataset.price) - (+b.dataset.price);
         if (v === "price-desc") return (+b.dataset.price) - (+a.dataset.price);
         if (v === "name")       return a.dataset.name.localeCompare(b.dataset.name);
-        return 0; // featured = original order
+        return 0;
       });
       sorted.forEach((c) => grid.appendChild(c));
-
-      // 3) show/hide with the load-more cap
       cards.forEach((c) => c.classList.add("is-hidden"));
       sorted.slice(0, shown).forEach((c) => c.classList.remove("is-hidden"));
-
-      if (empty) empty.hidden = matched.length !== 0;
+      if (empty)    empty.hidden = matched.length !== 0;
       if (loadmore) loadmore.style.display = shown >= matched.length ? "none" : "";
     }
 
+    /* ---- animated apply: fade grid out → update → fade in ---- */
+    function animatedApply() {
+      grid.classList.add("is-filtering");
+      setTimeout(() => {
+        apply();
+        updateCount();
+        grid.classList.remove("is-filtering");
+      }, 230);
+    }
+
+    /* ---- chip clicks ---- */
     chips.forEach((chip) =>
       chip.addEventListener("click", () => {
-        chips.forEach((x) => x.classList.remove("is-active"));
+        chips.forEach((x) => { x.classList.remove("is-active"); x.setAttribute("aria-selected", "false"); });
         chip.classList.add("is-active");
+        chip.setAttribute("aria-selected", "true");
         activeFilter = chip.dataset.filter;
         shown = PAGE;
-        apply();
+        moveIndicator(chip);
+        animatedApply();
       })
     );
-    if (sortSel) sortSel.addEventListener("change", () => { shown = PAGE; apply(); });
-    if (loadmore) loadmore.addEventListener("click", () => { shown += PAGE; apply(); });
+
+    if (sortSel) sortSel.addEventListener("change", () => { shown = PAGE; animatedApply(); });
+    if (loadmore) loadmore.addEventListener("click", () => { shown += PAGE; apply(); updateCount(); });
+
+    /* ---- view toggle (2-col / 3-col) ---- */
+    $$(".view-btn", document).forEach((btn) =>
+      btn.addEventListener("click", () => {
+        $$(".view-btn", document).forEach((b) => { b.classList.remove("is-active"); b.setAttribute("aria-pressed", "false"); });
+        btn.classList.add("is-active");
+        btn.setAttribute("aria-pressed", "true");
+        grid.setAttribute("data-cols", btn.dataset.cols);
+      })
+    );
+
+    /* ---- wishlist buttons ---- */
+    $$("[data-wish]", grid).forEach((btn) =>
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        btn.classList.toggle("is-wished");
+        btn.setAttribute("aria-label", btn.classList.contains("is-wished") ? "Remove from wishlist" : "Save to wishlist");
+      })
+    );
 
     apply();
+    updateCount();
   })();
+
+  /* ---------------------------------------- COLLECTION: editorial slider */
+  (function colSlider() {
+    const section = $("#colSlider");
+    if (!section) return;
+
+    const slides    = $$(".col-slide",   section);
+    const bars      = $$(".col-sbar",    section);
+    const fills     = $$(".col-sbar__fill", section);
+    const counterEl = $("#colSliderCur");
+    const prevBtn   = $("#colSliderPrev");
+    const nextBtn   = $("#colSliderNext");
+
+    const TOTAL    = slides.length;
+    const INTERVAL = 3000;
+    let current = 0;
+    let timer;
+
+    function pad(n) { return String(n + 1).padStart(2, "0"); }
+
+    function goTo(idx) {
+      /* remove active from old */
+      slides[current].classList.remove("is-active");
+      bars[current].classList.remove("is-active");
+
+      /* advance index */
+      current = ((idx % TOTAL) + TOTAL) % TOTAL;
+
+      /* add active to new */
+      slides[current].classList.add("is-active");
+      bars[current].classList.add("is-active");
+
+      /* restart fill animation via reflow */
+      const fill = fills[current];
+      fill.style.animation = "none";
+      void fill.offsetWidth;
+      fill.style.animation = "";
+
+      /* update counter */
+      if (counterEl) counterEl.textContent = pad(current);
+    }
+
+    function startAuto() { timer = setInterval(() => goTo(current + 1), INTERVAL); }
+    function stopAuto()  { clearInterval(timer); }
+
+    /* arrow buttons */
+    if (prevBtn) prevBtn.addEventListener("click", () => { stopAuto(); goTo(current - 1); startAuto(); });
+    if (nextBtn) nextBtn.addEventListener("click", () => { stopAuto(); goTo(current + 1); startAuto(); });
+
+    /* progress bar click = jump to slide */
+    bars.forEach((bar, i) =>
+      bar.addEventListener("click", () => { stopAuto(); goTo(i); startAuto(); })
+    );
+
+    /* pause on hover / focus */
+    section.addEventListener("mouseenter", stopAuto);
+    section.addEventListener("mouseleave", startAuto);
+
+    /* touch / swipe */
+    let tx = 0;
+    section.addEventListener("touchstart", (e) => { tx = e.touches[0].clientX; }, { passive: true });
+    section.addEventListener("touchend", (e) => {
+      const dx = e.changedTouches[0].clientX - tx;
+      if (Math.abs(dx) > 48) { stopAuto(); goTo(dx > 0 ? current - 1 : current + 1); startAuto(); }
+    });
+
+    /* keyboard */
+    section.setAttribute("tabindex", "0");
+    section.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft")  { stopAuto(); goTo(current - 1); startAuto(); }
+      if (e.key === "ArrowRight") { stopAuto(); goTo(current + 1); startAuto(); }
+    });
+
+    /* boot */
+    goTo(0);
+    startAuto();
+  })();
+
 })();
 
 /* ============================================================================
@@ -719,7 +856,7 @@
     const form = $("#checkoutForm");
     if (!form) return;
 
-    const fmt = (n) => "$" + Number(n).toLocaleString("en-US");
+    const fmt = (n) => "€" + Number(n).toLocaleString("fr-FR");
     let pageCart = [];
     try { pageCart = JSON.parse(localStorage.getItem("bleumon_cart") || "[]"); } catch {}
 
@@ -728,32 +865,89 @@
     const totalsEl   = $("#checkoutTotals");
     const subtotalEl = $("#checkoutSubtotal");
     const totalEl    = $("#checkoutTotal");
+    const shippingRow = $("#shippingRow");
     const successEl  = $("#checkoutSuccess");
+    const orderNumEl = $("#checkoutOrderNum");
+    let shippingCost = 0;
+    let discount = 0;
+
+    function calcTotal() {
+      const sub = pageCart.reduce((s, i) => s + i.qty * i.price, 0);
+      const total = Math.max(0, sub - discount) + shippingCost;
+      if (subtotalEl) subtotalEl.textContent = fmt(sub);
+      if (totalEl)    totalEl.textContent    = fmt(total);
+    }
 
     function renderSummary() {
       const has = pageCart.length > 0;
       if (emptyEl)  emptyEl.hidden  = has;
       if (totalsEl) totalsEl.hidden = !has;
       if (!has) return;
-      const sub = pageCart.reduce((s, i) => s + i.qty * i.price, 0);
-      if (subtotalEl) subtotalEl.textContent = fmt(sub);
-      if (totalEl)    totalEl.textContent    = fmt(sub);
       if (itemsEl) {
         itemsEl.innerHTML = pageCart.map((i) => `
           <div class="chk-item">
-            <div class="chk-item__img" style="background-image:${i.bg}"></div>
+            <div class="chk-item__img" style="background:${i.bg}">
+              ${i.qty > 1 ? `<span class="chk-item__qty">${i.qty}</span>` : ""}
+            </div>
             <div class="chk-item__info">
               <div class="chk-item__name">${i.name}</div>
-              <div class="chk-item__meta">${i.cat} · Qty ${i.qty}</div>
+              <div class="chk-item__meta">${i.cat}</div>
             </div>
             <div class="chk-item__price">${fmt(i.qty * i.price)}</div>
           </div>`).join("");
       }
+      calcTotal();
     }
 
     renderSummary();
 
-    /* card number formatting */
+    /* Shipping method — update price row */
+    document.querySelectorAll('[name="ship"]').forEach((radio) => {
+      radio.addEventListener("change", () => {
+        shippingCost = Number(radio.value);
+        if (shippingRow) {
+          shippingRow.querySelector("span:last-child").textContent =
+            shippingCost === 0 ? "Free" : fmt(shippingCost);
+          shippingRow.querySelector("span:last-child").className =
+            shippingCost === 0 ? "checkout__free" : "";
+        }
+        calcTotal();
+      });
+    });
+
+    /* Promo toggle */
+    const promoToggle = $("#promoToggle");
+    const promoBody   = $("#promoBody");
+    if (promoToggle && promoBody) {
+      promoToggle.addEventListener("click", () => {
+        const open = !promoBody.hidden;
+        promoBody.hidden = open;
+        promoToggle.classList.toggle("is-open", !open);
+      });
+    }
+
+    /* Promo apply */
+    const promoApply = $("#promoApply");
+    const promoInput = $("#promoInput");
+    const promoMsg   = $("#promoMsg");
+    const CODES = { "BLEUMON10": 10, "PARIS20": 20 };
+    if (promoApply && promoInput && promoMsg) {
+      promoApply.addEventListener("click", () => {
+        const code = promoInput.value.trim().toUpperCase();
+        promoMsg.hidden = false;
+        if (CODES[code]) {
+          discount = CODES[code];
+          promoMsg.textContent = `Code applied — €${discount} off!`;
+          promoMsg.className = "chk-promo__msg chk-promo__msg--ok";
+          calcTotal();
+        } else {
+          promoMsg.textContent = "Invalid code. Try BLEUMON10 or PARIS20.";
+          promoMsg.className = "chk-promo__msg chk-promo__msg--err";
+        }
+      });
+    }
+
+    /* Card number spacing */
     const cardInput = form.querySelector('[name="card"]');
     if (cardInput) {
       cardInput.addEventListener("input", (e) => {
@@ -761,6 +955,8 @@
         e.target.value = v.replace(/(.{4})/g, "$1 ").trim();
       });
     }
+
+    /* Expiry formatting */
     const expiryInput = form.querySelector('[name="expiry"]');
     if (expiryInput) {
       expiryInput.addEventListener("input", (e) => {
@@ -770,11 +966,17 @@
       });
     }
 
+    /* Submit */
     form.addEventListener("submit", (e) => {
       e.preventDefault();
+      const num = "BLM-" + Math.random().toString(36).slice(2,7).toUpperCase();
+      if (orderNumEl) orderNumEl.textContent = "Order #" + num;
       form.hidden = true;
       if (successEl) successEl.hidden = false;
       localStorage.removeItem("bleumon_cart");
+      /* update cart count in nav */
+      const countEl = document.querySelector(".nav__count");
+      if (countEl) countEl.hidden = true;
     });
   })();
 
