@@ -17,78 +17,70 @@ export default function Home() {
 
       <main id="top">
 
-        {/* ============ HERO ============ */}
-        <section className="hero">
-          <p className="hero__eyebrow" data-reveal="">
-            <span className="dot"></span> New season — The Tailoring Edit
-          </p>
+        {/* ============ HERO SLIDER ============ */}
+        <section className="hero-slider" id="homeSlider" aria-label="Bleumon hero">
 
-          <h1 className="hero__title" aria-label="Clothes that move with you.">
-            <span className="line">
-              <span className="word" data-hero="">Clothes</span>{' '}
-              <span className="word" data-hero="">that</span>
-            </span>
-            <span className="line">
-              <span className="word word--accent" data-hero="">move</span>{' '}
-              <span className="word" data-hero="">with you.</span>
-            </span>
-          </h1>
+          <div className="hs-track">
 
-          <div className="hero__meta">
-            <p className="hero__lede" data-reveal="">
-              Bleumon makes contemporary essentials — tailoring, denim and easy
-              knits — cut clean, made well, and designed to be worn on repeat.
-            </p>
-            <a href="/collection" className="btn btn--solid" data-magnetic="" data-reveal="">
-              <span>Shop new arrivals</span>
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg>
-            </a>
+            {/* Slide 1 — New Season */}
+            <div className="hs-slide is-active">
+              <div className="hs-slide__bg" style={{ backgroundImage: "url('https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=1600&h=2000&fit=crop')" }}></div>
+              <div className="hs-slide__overlay"></div>
+              <div className="hs-slide__content">
+                <span className="hs-slide__tag">New Season · 2025</span>
+                <h1 className="hs-slide__title">Clothes that<br /><em>move with you.</em></h1>
+                <p className="hs-slide__desc">Contemporary essentials — tailoring, denim and easy knits — cut clean, made well, and worn on repeat.</p>
+                <a href="/collection" className="hs-slide__cta">Shop new arrivals →</a>
+              </div>
+            </div>
+
+            {/* Slide 2 — Women's Edit */}
+            <div className="hs-slide">
+              <div className="hs-slide__bg" style={{ backgroundImage: "url('https://images.pexels.com/photos/2220316/pexels-photo-2220316.jpeg?auto=compress&cs=tinysrgb&w=1600&h=2000&fit=crop')" }}></div>
+              <div className="hs-slide__overlay"></div>
+              <div className="hs-slide__content">
+                <span className="hs-slide__tag">Women&apos;s Edit · Paris</span>
+                <h1 className="hs-slide__title">Dressed for<br /><em>every mood.</em></h1>
+                <p className="hs-slide__desc">Light layers and clean silhouettes for the new season.</p>
+                <a href="/collection" className="hs-slide__cta">Shop women&apos;s →</a>
+              </div>
+            </div>
+
+            {/* Slide 3 — The Bold Edit */}
+            <div className="hs-slide">
+              <div className="hs-slide__bg" style={{ backgroundImage: "url('https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=1600&h=2000&fit=crop')" }}></div>
+              <div className="hs-slide__overlay"></div>
+              <div className="hs-slide__content">
+                <span className="hs-slide__tag">The Bold Edit · SS 2025</span>
+                <h1 className="hs-slide__title">Style with<br /><em>no rules.</em></h1>
+                <p className="hs-slide__desc">Statement silhouettes for those who dress entirely on their own terms.</p>
+                <a href="/collection" className="hs-slide__cta">Explore the edit →</a>
+              </div>
+            </div>
+
           </div>
 
-          <div className="hero__stage" aria-hidden="true">
-            <figure
-              className="float float--1"
-              data-parallax="0.06"
-              style={{
-                backgroundImage: "url('https://images.pexels.com/photos/982585/pexels-photo-982585.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop'),linear-gradient(150deg,#d9d3c6,#b9b2a2)",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            >
-              <span>01 · The Blazer</span>
-            </figure>
-            <figure
-              className="float float--2"
-              data-parallax="-0.04"
-              style={{
-                backgroundImage: "url('https://images.pexels.com/photos/30736117/pexels-photo-30736117.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop'),linear-gradient(150deg,#c8c6bc,#9fa094)",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            >
-              <span>02 · Slip Dress</span>
-            </figure>
-            <figure
-              className="float float--3"
-              data-parallax="0.08"
-              style={{
-                backgroundImage: "url('https://images.pexels.com/photos/9603489/pexels-photo-9603489.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop'),linear-gradient(150deg,#2330e6,#1a23b0)",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            >
-              <span>03 · Leather Tote</span>
-            </figure>
+          {/* Bottom nav */}
+          <div className="hs-nav" aria-hidden="true">
+            <div className="hs-counter">
+              <span className="hs-counter__cur">01</span>
+              <span className="hs-counter__total"> / 03</span>
+            </div>
+            <div className="hs-bars">
+              <button className="hs-bar is-active" data-slide="0"><div className="hs-bar__fill"></div></button>
+              <button className="hs-bar" data-slide="1"><div className="hs-bar__fill"></div></button>
+              <button className="hs-bar" data-slide="2"><div className="hs-bar__fill"></div></button>
+            </div>
+            <div className="hs-arrows">
+              <button className="hs-arrow hs-arrow--prev" aria-label="Previous slide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+              </button>
+              <button className="hs-arrow hs-arrow--next" aria-label="Next slide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+            </div>
           </div>
 
-          <a href="#collections" className="hero__scroll" data-magnetic="">
-            <span>Scroll</span>
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 5v14M6 13l6 6 6-6" />
-            </svg>
-          </a>
         </section>
 
         {/* ============ MARQUEE ============ */}
@@ -108,7 +100,6 @@ export default function Home() {
         {/* ============ COLLECTIONS ============ */}
         <section className="collections" id="collections">
           <header className="section-head">
-            <span className="section-head__num" data-reveal="">(01)</span>
             <h2 className="section-head__title" data-reveal="">
               Three ways<br />to get dressed.
             </h2>
@@ -123,7 +114,7 @@ export default function Home() {
               <div
                 className="coll__media"
                 style={{
-                  backgroundImage: "url('https://images.pexels.com/photos/982585/pexels-photo-982585.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(160deg,#d9d3c6,#b3ab9a)",
+                  backgroundImage: "url('https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(160deg,#d9d3c6,#b3ab9a)",
                   backgroundSize: 'cover',
                   backgroundPosition: 'center top',
                 }}
@@ -138,7 +129,7 @@ export default function Home() {
               <div
                 className="coll__media"
                 style={{
-                  backgroundImage: "url('https://images.pexels.com/photos/9431122/pexels-photo-9431122.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(160deg,#c8c6bc,#a0a193)",
+                  backgroundImage: "url('https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(160deg,#c8c6bc,#a0a193)",
                   backgroundSize: 'cover',
                   backgroundPosition: 'center top',
                 }}
@@ -153,7 +144,7 @@ export default function Home() {
               <div
                 className="coll__media"
                 style={{
-                  backgroundImage: "url('https://images.pexels.com/photos/9603489/pexels-photo-9603489.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(160deg,#ded6c9,#c0b29c)",
+                  backgroundImage: "url('https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(160deg,#ded6c9,#c0b29c)",
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
@@ -166,59 +157,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ============ PINNED SHOWCASE ============ */}
-        <section className="showcase" id="showcase">
-          <div className="showcase__sticky">
-            <div className="showcase__visual">
-              <div
-                className="showcase__card"
-                id="showcaseCard"
-                style={{
-                  backgroundImage: "linear-gradient(to top,rgba(15,14,10,.55),rgba(15,14,10,.05)),url('https://images.pexels.com/photos/19272278/pexels-photo-19272278.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop')",
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center top',
-                }}
-              >
-                <span className="showcase__sku">SKU · BL-001</span>
-                <span className="showcase__name">The Tailored Blazer</span>
-              </div>
-            </div>
-
-            <div className="showcase__copy">
-              <p className="showcase__step is-active" data-step="0">
-                <span className="showcase__kicker">Cut once</span>
-                A clean, slightly oversized shoulder in a soft Italian wool blend —
-                structured enough to dress up, easy enough to throw over denim.
-              </p>
-              <p className="showcase__step" data-step="1">
-                <span className="showcase__kicker">Made to last</span>
-                Fully lined, with horn buttons and felled seams, made in limited runs
-                by a family atelier rather than a fast-fashion line.
-              </p>
-              <p className="showcase__step" data-step="2">
-                <span className="showcase__kicker">Yours, on repeat</span>
-                One blazer, a dozen outfits — and free alterations in your first year
-                so it always fits exactly the way you want.
-              </p>
-
-              <div className="showcase__progress" aria-hidden="true">
-                <span className="showcase__dot is-active"></span>
-                <span className="showcase__dot"></span>
-                <span className="showcase__dot"></span>
-              </div>
-
-              <a href="/product" className="btn btn--line" data-magnetic="">
-                <span>View the Tailored Blazer — $245</span>
-              </a>
-            </div>
-          </div>
-        </section>
-
         {/* ============ SHOP GRID ============ */}
         <section className="shop" id="shop">
           <header className="section-head section-head--split">
             <div>
-              <span className="section-head__num" data-reveal="">(02)</span>
               <h2 className="section-head__title" data-reveal="">Best&nbsp;loved.</h2>
             </div>
             <a href="/collection" className="link-arrow" data-magnetic="" data-reveal="">
@@ -294,9 +236,9 @@ export default function Home() {
               <div
                 className="product__media"
                 style={{
-                  backgroundImage: "url('https://images.pexels.com/photos/9603489/pexels-photo-9603489.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop'),linear-gradient(155deg,#ded6c9,#c0b29c)",
+                  backgroundImage: "url('https://buffalojackson.com/cdn/shop/articles/ryder-reserve-bison-leather-duffloe-bag-2_900x900_crop_center_095727c4-c15d-4d19-885b-2337c6416986_1400x.progressive.webp.jpg?v=1708707024'),linear-gradient(155deg,#ded6c9,#c0b29c)",
                   backgroundSize: 'cover',
-                  backgroundPosition: 'center',
+                  backgroundPosition: 'center top',
                 }}
               >
                 <span className="product__add" data-magnetic="">Quick add +</span>
@@ -423,7 +365,6 @@ export default function Home() {
               <span className="vorb vorb--7">Rive Gauche</span>
             </div>
 
-            <span className="vendors__eyebrow" data-reveal="">Our curated makers</span>
             <h2 className="vendors__title" data-reveal="">
               Independent <em>designers.</em><br />One destination.
             </h2>
@@ -567,21 +508,54 @@ export default function Home() {
 
         </section>
 
+        {/* ============ PINNED SHOWCASE ============ */}
+        <section className="showcase" id="showcase">
+          <div className="showcase__sticky">
+            <div className="showcase__visual">
+              <div
+                className="showcase__card"
+                id="showcaseCard"
+                style={{
+                  backgroundImage: "linear-gradient(to top,rgba(15,14,10,.55),rgba(15,14,10,.05)),url('https://images.pexels.com/photos/19272278/pexels-photo-19272278.jpeg?auto=compress&cs=tinysrgb&w=900&h=1100&fit=crop')",
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center top',
+                }}
+              >
+                <span className="showcase__sku">SKU · BL-001</span>
+                <span className="showcase__name">The Tailored Blazer</span>
+              </div>
+            </div>
+
+            <div className="showcase__copy">
+              <p className="showcase__step is-active" data-step="0">
+                A clean, slightly oversized shoulder in a soft Italian wool blend —
+                structured enough to dress up, easy enough to throw over denim.
+              </p>
+              <p className="showcase__step" data-step="1">
+                Fully lined, with horn buttons and felled seams, made in limited runs
+                by a family atelier rather than a fast-fashion line.
+              </p>
+              <p className="showcase__step" data-step="2">
+                One blazer, a dozen outfits — and free alterations in your first year
+                so it always fits exactly the way you want.
+              </p>
+
+              <div className="showcase__progress" aria-hidden="true">
+                <span className="showcase__dot is-active"></span>
+                <span className="showcase__dot"></span>
+                <span className="showcase__dot"></span>
+              </div>
+
+              <a href="/product" className="btn btn--line" data-magnetic="">
+                <span>View the Tailored Blazer — $245</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
         {/* ============ STORY ============ */}
         <section className="story" id="story">
-          <div
-            className="story__media"
-            data-parallax-bg=""
-            style={{
-              backgroundImage: "url('https://images.pexels.com/photos/17474220/pexels-photo-17474220.jpeg?auto=compress&cs=tinysrgb&w=1200&h=1400&fit=crop'),linear-gradient(160deg,#b9b2a2,#8c8576)",
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          >
-            <span className="story__media-label">The Spring lookbook · 2025</span>
-          </div>
           <div className="story__copy">
-            <span className="section-head__num" data-reveal="">(03)</span>
             <h2 className="story__title" data-reveal="">
               We make fewer pieces,<br />and we make them right.
             </h2>
@@ -606,6 +580,17 @@ export default function Home() {
               </div>
             </div>
           </div>
+          <div
+            className="story__media"
+            data-parallax-bg=""
+            style={{
+              backgroundImage: "url('https://images.pexels.com/photos/17474220/pexels-photo-17474220.jpeg?auto=compress&cs=tinysrgb&w=1200&h=1400&fit=crop'),linear-gradient(160deg,#b9b2a2,#8c8576)",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            <span className="story__media-label">The Spring lookbook · 2025</span>
+          </div>
         </section>
 
         {/* ============ QUOTE ============ */}
@@ -620,7 +605,6 @@ export default function Home() {
         <section className="journal" id="journal">
           <header className="section-head section-head--split">
             <div>
-              <span className="section-head__num" data-reveal="">(04)</span>
               <h2 className="section-head__title" data-reveal="">From the journal.</h2>
             </div>
             <a href="#journal" className="link-arrow" data-magnetic="" data-reveal="">

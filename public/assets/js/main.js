@@ -489,6 +489,72 @@
     updateCount();
   })();
 
+  /* ---------------------------------------- HOME: hero slider */
+  (function homeSlider() {
+    const section = $("#homeSlider");
+    if (!section) return;
+
+    const slides    = $$(".hs-slide",     section);
+    const bars      = $$(".hs-bar",       section);
+    const fills     = $$(".hs-bar__fill", section);
+    const counterEl = $(".hs-counter__cur", section);
+    const prevBtn   = $(".hs-arrow--prev", section);
+    const nextBtn   = $(".hs-arrow--next", section);
+
+    const TOTAL    = slides.length;
+    const INTERVAL = 5000;
+    let current = 0;
+    let timer;
+
+    function pad(n) { return String(n + 1).padStart(2, "0"); }
+
+    function goTo(idx) {
+      slides[current].classList.remove("is-active");
+      bars[current].classList.remove("is-active");
+
+      current = ((idx % TOTAL) + TOTAL) % TOTAL;
+
+      slides[current].classList.add("is-active");
+      bars[current].classList.add("is-active");
+
+      const fill = fills[current];
+      fill.style.animation = "none";
+      void fill.offsetWidth;
+      fill.style.animation = "";
+
+      if (counterEl) counterEl.textContent = pad(current);
+    }
+
+    function startAuto() { timer = setInterval(() => goTo(current + 1), INTERVAL); }
+    function stopAuto()  { clearInterval(timer); }
+
+    if (prevBtn) prevBtn.addEventListener("click", () => { stopAuto(); goTo(current - 1); startAuto(); });
+    if (nextBtn) nextBtn.addEventListener("click", () => { stopAuto(); goTo(current + 1); startAuto(); });
+
+    bars.forEach((bar, i) =>
+      bar.addEventListener("click", () => { stopAuto(); goTo(i); startAuto(); })
+    );
+
+    section.addEventListener("mouseenter", stopAuto);
+    section.addEventListener("mouseleave", startAuto);
+
+    let tx = 0;
+    section.addEventListener("touchstart", (e) => { tx = e.touches[0].clientX; }, { passive: true });
+    section.addEventListener("touchend", (e) => {
+      const dx = e.changedTouches[0].clientX - tx;
+      if (Math.abs(dx) > 48) { stopAuto(); goTo(dx > 0 ? current - 1 : current + 1); startAuto(); }
+    });
+
+    section.setAttribute("tabindex", "0");
+    section.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft")  { stopAuto(); goTo(current - 1); startAuto(); }
+      if (e.key === "ArrowRight") { stopAuto(); goTo(current + 1); startAuto(); }
+    });
+
+    goTo(0);
+    startAuto();
+  })();
+
   /* ---------------------------------------- COLLECTION: editorial slider */
   (function colSlider() {
     const section = $("#colSlider");
